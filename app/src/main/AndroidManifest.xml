@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto_Parcial3">
         <activity
+            android:name=".Menu_activity"
+            android:exported="false"
+            android:label="@string/title_activity_menu"
+            android:theme="@style/Theme.Proyecto_Parcial3.NoActionBar" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

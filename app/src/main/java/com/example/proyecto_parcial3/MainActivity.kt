@@ -1,7 +1,7 @@
 package com.example.proyecto_parcial3
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.proyecto_parcial3.databinding.ActivityMainBinding
 
@@ -15,18 +15,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val categorias = listOf(
-            "Playa",
-            "Montaña",
-            "Ciudad"
-        )
-
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            categorias
-        )
-
-        binding.spinnerCategoria.adapter = adapter
+        // Configuración del botón para navegar a Menu_activity
+        binding.btnLogIn.setOnClickListener {
+            val intent = Intent(this, Menu_activity::class.java)
+            startActivity(intent)
+            // finish() // Descomenta si no quieres que el usuario vuelva al "login" con el botón atrás
+        }
     }
 }
