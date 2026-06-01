@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Destino (Título principal) -->
+        <TextView
+            android:id="@+id/tvDestino"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Destino del Viaje"
+            android:textColor="#512DA8"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tvPresupuesto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Presupuesto (A la derecha, en verde) -->
+        <TextView
+            android:id="@+id/tvPresupuesto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$0.00"
+            android:textColor="#2E7D32"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDestino"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvDestino" />
+
+        <!-- Icono de Calendario -->
+        <ImageView
+            android:id="@+id/ivCalendario"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="12dp"
+            android:src="@android:drawable/ic_menu_my_calendar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDestino"
+            app:tint="#757575" />
+
+        <!-- Fecha -->
+        <TextView
+            android:id="@+id/tvFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="00/00/0000"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivCalendario"
+            app:layout_constraintStart_toEndOf="@+id/ivCalendario"
+            app:layout_constraintTop_toTopOf="@+id/ivCalendario" />
+
+        <!-- Icono de Transporte -->
+        <ImageView
+            android:id="@+id/ivTransporte"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="24dp"
+            android:src="@android:drawable/ic_menu_directions"
+            app:layout_constraintBottom_toBottomOf="@+id/tvFecha"
+            app:layout_constraintStart_toEndOf="@+id/tvFecha"
+            app:layout_constraintTop_toTopOf="@+id/tvFecha"
+            app:tint="#757575" />
+
+        <!-- Transporte -->
+        <TextView
+            android:id="@+id/tvTransporte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Transporte"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivTransporte"
+            app:layout_constraintStart_toEndOf="@+id/ivTransporte"
+            app:layout_constraintTop_toTopOf="@+id/ivTransporte" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
