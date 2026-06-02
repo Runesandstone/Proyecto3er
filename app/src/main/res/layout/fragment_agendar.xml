@@ -21,7 +21,6 @@
             android:textColor="@color/verde_oscuro"
             android:textSize="28sp"
             android:textStyle="bold"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,14 +45,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lblDestino" />
 
-        <!-- Fecha -->
+        <!-- Fecha Inicio -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutFecha"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Fecha de viaje"
+            android:hint="Fecha de inicio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinnerDestino"
@@ -61,6 +60,28 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editFecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Fecha Fin -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutFechaFin"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Fecha de fin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutFecha"
+            app:startIconDrawable="@android:drawable/ic_menu_my_calendar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editFechaFin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
@@ -78,7 +99,7 @@
             android:hint="Presupuesto aproximado ($)"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutFecha"
+            app:layout_constraintTop_toBottomOf="@id/layoutFechaFin"
             app:startIconDrawable="@android:drawable/ic_menu_manage">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -138,13 +159,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
-
                 android:textColor="@color/black"
                 app:chipBackgroundColor="@color/chip_selector"
                 app:checkedIconTint="@color/white"
                 app:checkedIconVisible="false"
                 android:text="Bus" />
         </com.google.android.material.chip.ChipGroup>
+
+        <!-- Notas -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutNotas"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Notas adicionales"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroupTransporte"
+            app:startIconDrawable="@android:drawable/ic_menu_edit">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editNotas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:minLines="3" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnGuardar"
@@ -157,9 +199,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radioGroupTransporte"
+            app:layout_constraintTop_toBottomOf="@id/layoutNotas"
             app:layout_constraintVertical_bias="1.0" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

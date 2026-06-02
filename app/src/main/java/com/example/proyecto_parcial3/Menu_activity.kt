@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.snackbar.Snackbar
@@ -52,9 +53,15 @@ class Menu_activity : AppCompatActivity() {
 
         val headerView = navView.getHeaderView(0)
         imageViewPerfil = headerView.findViewById(R.id.imageView)
+        val btnEditProfile: ImageButton = headerView.findViewById(R.id.imageButton)
 
         imageViewPerfil.setOnClickListener {
             pickImageLauncher.launch(arrayOf("image/*"))
+        }
+
+        btnEditProfile.setOnClickListener {
+            val intent = Intent(this, profileActivity::class.java)
+            startActivity(intent)
         }
 
         cargarFotoGuardada()
