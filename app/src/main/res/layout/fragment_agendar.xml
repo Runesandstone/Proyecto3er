@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/beige2"
     tools:context=".ui.agenda.AgendarFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Agendar Vacaciones"
-            android:textColor="#512DA8"
+            android:textColor="@color/verde_oscuro"
             android:textSize="28sp"
             android:textStyle="bold"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,6 +114,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_selector"
+                app:checkedIconTint="@color/white"
+                app:checkedIconVisible="false"
                 android:text="Avión" />
 
             <com.google.android.material.chip.Chip
@@ -120,6 +126,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_selector"
+                app:checkedIconTint="@color/white"
+                app:checkedIconVisible="false"
                 android:text="Auto" />
 
             <com.google.android.material.chip.Chip
@@ -128,6 +138,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
+
+                android:textColor="@color/black"
+                app:chipBackgroundColor="@color/chip_selector"
+                app:checkedIconTint="@color/white"
+                app:checkedIconVisible="false"
                 android:text="Bus" />
         </com.google.android.material.chip.ChipGroup>
 
@@ -138,7 +153,7 @@
             android:layout_marginTop="32dp"
             android:padding="12dp"
             android:text="Guardar Viaje"
-            android:backgroundTint="#512DA8"
+            android:backgroundTint="@color/verde"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

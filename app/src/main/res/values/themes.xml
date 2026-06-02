@@ -2,7 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Proyecto_Parcial3" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Color de los elementos principales (como los Chips y Checkboxes) -->
+        <item name="colorPrimary">@color/verde</item>
+        <item name="colorPrimaryVariant">@color/verde_oscuro</item>
+        <item name="android:statusBarColor">@color/verde</item> <!-- O el verde oscuro para que contraste -->
+
+
     </style>
 
     <style name="Theme.Proyecto_Parcial3" parent="Base.Theme.Proyecto_Parcial3" />

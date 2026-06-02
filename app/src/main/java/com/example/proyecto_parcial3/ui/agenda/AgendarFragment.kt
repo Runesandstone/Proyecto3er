@@ -27,11 +27,6 @@ class AgendarFragment : Fragment() {
 
         _binding = FragmentAgendarBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val textView: TextView = binding.txtTitulo
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 
