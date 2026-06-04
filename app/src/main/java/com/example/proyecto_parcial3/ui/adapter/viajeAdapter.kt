@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_parcial3.databinding.ItemViajeBinding
 import com.example.proyecto_parcial3.model.Viaje
 
-class ViajeAdapter(private val listaViajes: List<Viaje>) :
+class ViajeAdapter(private var listaViajes: List<Viaje>) :
     RecyclerView.Adapter<ViajeAdapter.ViajeViewHolder>() {
 
     class ViajeViewHolder(val binding: ItemViajeBinding) : RecyclerView.ViewHolder(binding.root)
@@ -20,11 +20,20 @@ class ViajeAdapter(private val listaViajes: List<Viaje>) :
         val viaje = listaViajes[position]
         with(holder.binding) {
             tvDestino.text = viaje.destino
-            tvPresupuesto.text = "$${viaje.presupuesto}"
-            tvFecha.text = viaje.fecha
+            tvPresupuesto.text = String.format("$%.2f", viaje.presupuesto)
             tvTransporte.text = viaje.transporte
+
+            // Usamos las variables que coinciden con su modelo de datos
+            tvFecha.text = "Inicio: ${viaje.fecha}"
+            tvFecha2.text = "Fin: ${viaje.fFin}" // 👈 Sincronizado con fFin
         }
     }
 
     override fun getItemCount(): Int = listaViajes.size
+
+    // Función necesaria para refrescar la pantalla sin crasheos
+    fun actualizarLista(nuevaLista: List<Viaje>) {
+        this.listaViajes = nuevaLista
+        notifyDataSetChanged()
+    }
 }

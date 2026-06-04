@@ -1,10 +1,11 @@
 package com.example.proyecto_parcial3.model
 
-
 data class Viaje(
-    val id: Int = 0, // El 0 indica que es nuevo y la DB le asignará uno
+    val id: Int,
     val destino: String,
     val fecha: String,
+    val fFin: String,
     val presupuesto: Double,
-    val transporte: String
+    val transporte: String,
+    val notas: String
 )
