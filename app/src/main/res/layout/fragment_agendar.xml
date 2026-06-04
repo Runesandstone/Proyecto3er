@@ -17,7 +17,7 @@
             android:id="@+id/txtTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Agendar Vacaciones"
+            android:text="@string/menu_gallery"
             android:textColor="@color/verde_oscuro"
             android:textSize="28sp"
             android:textStyle="bold"
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Selecciona tu destino:"
+            android:text="@string/selecciona_destino"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/txtTitulo" />
@@ -52,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Fecha de inicio"
+            android:hint="@string/fecha_inicio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/spinnerDestino"
@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Fecha de fin"
+            android:hint="@string/fecha_fin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutFecha"
@@ -96,7 +96,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Presupuesto aproximado ($)"
+            android:hint="@string/presupuesto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutFechaFin"
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Tipo de transporte:"
+            android:text="@string/tipo_transporte"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutPresupuesto" />
@@ -139,7 +139,7 @@
                 app:chipBackgroundColor="@color/chip_selector"
                 app:checkedIconTint="@color/white"
                 app:checkedIconVisible="false"
-                android:text="Avión" />
+                android:text="@string/avi_n" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAuto"
@@ -151,7 +151,7 @@
                 app:chipBackgroundColor="@color/chip_selector"
                 app:checkedIconTint="@color/white"
                 app:checkedIconVisible="false"
-                android:text="Auto" />
+                android:text="@string/auto" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipBus"
@@ -173,7 +173,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Notas adicionales"
+            android:hint="@string/notas_adicionales"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/radioGroupTransporte"
@@ -194,7 +194,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:padding="12dp"
-            android:text="Guardar Viaje"
+            android:text="@string/guardar_viaje"
             android:backgroundTint="@color/verde"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

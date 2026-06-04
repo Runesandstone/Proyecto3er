@@ -5,10 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
-import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.activity.result.contract.ActivityResultContracts
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -25,15 +22,6 @@ class Menu_activity : AppCompatActivity() {
     private lateinit var binding: ActivityMenuBinding
     private lateinit var imageViewPerfil: ImageView
 
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-        if (uri != null) {
-            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            imageViewPerfil.setImageURI(uri)
-            val sharedPreferences = getSharedPreferences("AjustesApp", Context.MODE_PRIVATE)
-            sharedPreferences.edit().putString("foto_guardada", uri.toString()).apply()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,24 +30,15 @@ class Menu_activity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMenu.toolbar)
 
-        binding.appBarMenu.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
-        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_menu)
 
         val headerView = navView.getHeaderView(0)
         imageViewPerfil = headerView.findViewById(R.id.imageView)
-        val btnEditProfile: ImageButton = headerView.findViewById(R.id.imageButton)
 
+        // Ahora al hacer clic en la foto de perfil del menú, te lleva a la actividad de perfil
         imageViewPerfil.setOnClickListener {
-            pickImageLauncher.launch(arrayOf("image/*"))
-        }
-
-        btnEditProfile.setOnClickListener {
             val intent = Intent(this, profileActivity::class.java)
             startActivity(intent)
         }
@@ -87,6 +66,11 @@ class Menu_activity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cargarFotoGuardada()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

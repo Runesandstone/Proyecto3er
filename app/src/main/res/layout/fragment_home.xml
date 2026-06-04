@@ -16,7 +16,7 @@
         android:backgroundTint="@color/verde"
         android:minHeight="110dp"
         android:padding="16dp"
-        android:text="Empieza a planear!"
+        android:text="@string/empieza_planear"
         android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

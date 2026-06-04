@@ -18,7 +18,7 @@
         android:layout_marginStart="220dp"
         android:layout_marginTop="100dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Editar perfil"
+        android:contentDescription="@string/editar_perfil"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_edit"

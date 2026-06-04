@@ -42,4 +42,26 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="crear_cuenta">Crear Cuenta</string>
+    <string name="nombre_usuario">Nombre de usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="confirmar_pass">Confirmar contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="log_out">Cerrar Sesion</string>
+    <string name="empieza_planear">Empieza a planear!</string>
+    <string name="ver_viajes">Ver viajes</string>
+    <string name="cambiar_foto">Cambiar foto de perfil</string>
+    <string name="guardar">Guardar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="selecciona_destino">Selecciona tu destino:</string>
+    <string name="fecha_inicio">Fecha de inicio</string>
+    <string name="fecha_fin">Fecha de fin</string>
+    <string name="presupuesto">Presupuesto aproximado ($)</string>
+    <string name="tipo_transporte">Tipo de transporte:</string>
+    <string name="avi_n">Avión</string>
+    <string name="auto">Automóvil</string>
+    <string name="notas_adicionales">Notas adicionales</string>
+    <string name="guardar_viaje">Guardar Viaje</string>
+    <string name="editar_perfil">Editar perfil</string>
 </resources>
