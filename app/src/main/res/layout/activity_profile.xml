@@ -9,7 +9,7 @@
     android:padding="24dp"
     tools:context=".profileActivity">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivProfilePicture"
         android:layout_width="140dp"
         android:layout_height="140dp"
@@ -21,6 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/EstiloImagenCircular"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
