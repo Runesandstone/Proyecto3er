@@ -14,7 +14,7 @@
         android:padding="24dp">
 
         <TextView
-            android:id="@+id/txtTitulo"
+            android:id="@+id/tvTitulo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/menu_gallery"
@@ -26,14 +26,14 @@
 
         <!-- Destino -->
         <TextView
-            android:id="@+id/lblDestino"
+            android:id="@+id/tvSelectDestino"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/selecciona_destino"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTitulo" />
+            app:layout_constraintTop_toBottomOf="@id/tvTitulo" />
 
         <Spinner
             android:id="@+id/spinnerDestino"
@@ -43,7 +43,7 @@
             android:entries="@array/spinner_items"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lblDestino" />
+            app:layout_constraintTop_toBottomOf="@id/tvSelectDestino" />
 
         <!-- Fecha Inicio -->
         <com.google.android.material.textfield.TextInputLayout
@@ -59,7 +59,7 @@
             app:startIconDrawable="@android:drawable/ic_menu_my_calendar">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editFecha"
+                android:id="@+id/etFecha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
@@ -81,7 +81,7 @@
             app:startIconDrawable="@android:drawable/ic_menu_my_calendar">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editFechaFin"
+                android:id="@+id/etFechaFin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
@@ -103,7 +103,7 @@
             app:startIconDrawable="@android:drawable/ic_menu_manage">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editPresupuesto"
+                android:id="@+id/etPresupuesto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal" />
@@ -111,7 +111,7 @@
 
         <!-- Transporte -->
         <TextView
-            android:id="@+id/txtTransporte"
+            android:id="@+id/tvtypeTransporte"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -127,7 +127,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtTransporte">
+            app:layout_constraintTop_toBottomOf="@id/tvtypeTransporte">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAvion"
@@ -180,7 +180,7 @@
             app:startIconDrawable="@android:drawable/ic_menu_edit">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editNotas"
+                android:id="@+id/etNotas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"

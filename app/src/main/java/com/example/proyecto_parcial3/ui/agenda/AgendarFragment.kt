@@ -42,11 +42,11 @@ class AgendarFragment : Fragment() {
         // =======================================================
         val lanzarCalendarioInicio = {
             mostrarCalendario { fecha ->
-                binding.editFecha.setText(fecha)
+                binding.etFecha.setText(fecha)
                 binding.layoutFecha.error = null
             }
         }
-        binding.editFecha.setOnClickListener { lanzarCalendarioInicio() }
+        binding.etFecha.setOnClickListener { lanzarCalendarioInicio() }
         binding.layoutFecha.setOnClickListener { lanzarCalendarioInicio() }
 
         // =======================================================
@@ -54,11 +54,11 @@ class AgendarFragment : Fragment() {
         // =======================================================
         val lanzarCalendarioFin = {
             mostrarCalendario { fecha ->
-                binding.editFechaFin.setText(fecha)
+                binding.etFechaFin.setText(fecha)
                 binding.layoutFechaFin.error = null
             }
         }
-        binding.editFechaFin.setOnClickListener { lanzarCalendarioFin() }
+        binding.etFechaFin.setOnClickListener { lanzarCalendarioFin() }
         binding.layoutFechaFin.setOnClickListener { lanzarCalendarioFin() }
 
         // =======================================================
@@ -72,10 +72,10 @@ class AgendarFragment : Fragment() {
 
             // Captura de datos básicos
             val destino = binding.spinnerDestino.selectedItem?.toString() ?: "No seleccionado"
-            val fechaInicio = binding.editFecha.text.toString().trim()
-            val fechaFin = binding.editFechaFin.text.toString().trim()
-            val presupuestoStr = binding.editPresupuesto.text.toString().trim()
-            val notas = binding.editNotas.text.toString().trim()
+            val fechaInicio = binding.etFecha.text.toString().trim()
+            val fechaFin = binding.etFechaFin.text.toString().trim()
+            val presupuestoStr = binding.etPresupuesto.text.toString().trim()
+            val notas = binding.etNotas.text.toString().trim()
 
             // Validar uno o varios chips seleccionados a la vez
             val transportesSeleccionados = mutableListOf<String>()
@@ -144,10 +144,10 @@ class AgendarFragment : Fragment() {
                 ).show()
 
                 // Limpiar el formulario para un nuevo registro
-                binding.editFecha.text?.clear()
-                binding.editFechaFin.text?.clear()
-                binding.editPresupuesto.text?.clear()
-                binding.editNotas.text?.clear()
+                binding.etFecha.text?.clear()
+                binding.etFechaFin.text?.clear()
+                binding.etPresupuesto.text?.clear()
+                binding.etNotas.text?.clear()
                 binding.chipAvion.isChecked = false
                 binding.chipAuto.isChecked = false
                 binding.chipBus.isChecked = false

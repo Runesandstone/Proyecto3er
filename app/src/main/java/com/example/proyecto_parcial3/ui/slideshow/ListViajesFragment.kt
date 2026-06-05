@@ -76,7 +76,7 @@ class ListViajesFragment : Fragment() {
             .show()
     }
 
-    // 🔴 FUNCIÓN AVANZADA PARA EDITAR VIAJE (INCLUYE CALENDARIOS)
+    // FUNCIÓN AVANZADA PARA EDITAR VIAJE (INCLUYE CALENDARIOS)
     private fun mostrarDialogoEditar(viaje: Viaje) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Editar datos de tu viaje")
@@ -140,8 +140,8 @@ class ListViajesFragment : Fragment() {
             val resultado = dbHelper.actualizarViaje(
                 idViaje = viaje.id,
                 destino = viaje.destino,       // Se mantiene igual
-                fechaInicio = nuevaFechaInicio, // 👈 Nueva Fecha Inicio guardada
-                fechaFin = nuevaFechaFin,       // 👈 Nueva Fecha Fin guardada
+                fechaInicio = nuevaFechaInicio, //  Nueva Fecha Inicio guardada
+                fechaFin = nuevaFechaFin,       //  Nueva Fecha Fin guardada
                 presupuesto = nuevoPresupuesto,
                 transporte = viaje.transporte,   // Se mantiene igual
                 notas = nuevasNotas

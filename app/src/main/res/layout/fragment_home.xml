@@ -10,7 +10,7 @@
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnEmpezar"
         android:layout_width="281dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/verde"
