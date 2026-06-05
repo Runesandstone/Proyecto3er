@@ -18,6 +18,7 @@ class AgendarFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var dbHelper: DBHelper
     private var idUsuarioActivo: Int = -1
+    private var fechaInicioMilis: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,65 +32,54 @@ class AgendarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         dbHelper = DBHelper(requireContext())
 
-        // Recuperar ID de usuario (Modo seguro para Fragments)
         idUsuarioActivo = activity?.intent?.getIntExtra("ID_USUARIO_ACTIVO", -1) ?: -1
         if (idUsuarioActivo == -1) {
-            idUsuarioActivo = 1 // ID de respaldo para tus pruebas locales
+            idUsuarioActivo = 1
         }
 
-        // =======================================================
-        // 1. SELECTOR DEL PRIMER CALENDARIO (FECHA INICIO)
-        // =======================================================
         val lanzarCalendarioInicio = {
-            mostrarCalendario { fecha ->
+            mostrarCalendarioInicio { fecha, milisegundos ->
                 binding.etFecha.setText(fecha)
                 binding.layoutFecha.error = null
+                fechaInicioMilis = milisegundos
+                binding.etFechaFin.text?.clear()
             }
         }
         binding.etFecha.setOnClickListener { lanzarCalendarioInicio() }
         binding.layoutFecha.setOnClickListener { lanzarCalendarioInicio() }
 
-        // =======================================================
-        // 2. SELECTOR DEL SEGUNDO CALENDARIO (FECHA FIN)
-        // =======================================================
         val lanzarCalendarioFin = {
-            mostrarCalendario { fecha ->
-                binding.etFechaFin.setText(fecha)
-                binding.layoutFechaFin.error = null
+            if (fechaInicioMilis == 0L) {
+                Toast.makeText(requireContext(), "Por favor, selecciona primero la fecha de inicio", Toast.LENGTH_SHORT).show()
+            } else {
+                mostrarCalendarioFin { fecha ->
+                    binding.etFechaFin.setText(fecha)
+                    binding.layoutFechaFin.error = null
+                }
             }
         }
         binding.etFechaFin.setOnClickListener { lanzarCalendarioFin() }
         binding.layoutFechaFin.setOnClickListener { lanzarCalendarioFin() }
 
-        // =======================================================
-        // 3. ACCIÓN Y VALIDACIÓN DEL BOTÓN GUARDAR VIAJE
-        // =======================================================
         binding.btnGuardar.setOnClickListener {
-            // Limpiar indicadores visuales de error previos
             binding.layoutFecha.error = null
             binding.layoutFechaFin.error = null
             binding.layoutPresupuesto.error = null
 
-            // Captura de datos básicos
             val destino = binding.spinnerDestino.selectedItem?.toString() ?: "No seleccionado"
             val fechaInicio = binding.etFecha.text.toString().trim()
             val fechaFin = binding.etFechaFin.text.toString().trim()
             val presupuestoStr = binding.etPresupuesto.text.toString().trim()
             val notas = binding.etNotas.text.toString().trim()
 
-            // Validar uno o varios chips seleccionados a la vez
             val transportesSeleccionados = mutableListOf<String>()
 
             if (binding.chipAvion.isChecked) transportesSeleccionados.add("Avión")
             if (binding.chipAuto.isChecked) transportesSeleccionados.add("Auto")
             if (binding.chipBus.isChecked) transportesSeleccionados.add("Bus")
 
-            // Convertimos la lista a un solo texto separado por comas (Ej: "Avión, Auto")
             val transporte = transportesSeleccionados.joinToString(", ")
 
-            // =======================================================
-            // VALIDADOR DETALLADO DE CAMPOS VACÍOS
-            // =======================================================
             var esFormularioValido = true
 
             if (fechaInicio.isEmpty()) {
@@ -107,7 +97,6 @@ class AgendarFragment : Fragment() {
                 esFormularioValido = false
             }
 
-            // Si la cadena está vacía significa que no marcó ningún Chip
             if (transporte.isEmpty()) {
                 Toast.makeText(
                     requireContext(),
@@ -117,15 +106,12 @@ class AgendarFragment : Fragment() {
                 esFormularioValido = false
             }
 
-            // Si algo falló, no guardamos y detenemos la ejecución aquí
             if (!esFormularioValido) {
                 return@setOnClickListener
             }
 
-            // Conversión segura de presupuesto
             val presupuesto = presupuestoStr.toDoubleOrNull() ?: 0.0
 
-            // 4. ALMACENAMIENTO EN SQLITE
             val resultado = dbHelper.insertarViaje(
                 idUsuarioActivo,
                 destino,
@@ -143,7 +129,6 @@ class AgendarFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                // Limpiar el formulario para un nuevo registro
                 binding.etFecha.text?.clear()
                 binding.etFechaFin.text?.clear()
                 binding.etPresupuesto.text?.clear()
@@ -151,6 +136,7 @@ class AgendarFragment : Fragment() {
                 binding.chipAvion.isChecked = false
                 binding.chipAuto.isChecked = false
                 binding.chipBus.isChecked = false
+                fechaInicioMilis = 0
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -161,10 +147,34 @@ class AgendarFragment : Fragment() {
         }
     }
 
-    // AÑADIDO: Función encargada de instanciar y mostrar el DatePickerDialog de Android
-    private fun mostrarCalendario(alSeleccionar: (String) -> Unit) {
+    private fun mostrarCalendarioInicio(alSeleccionar: (String, Long) -> Unit) {
         val calendar = Calendar.getInstance()
-        DatePickerDialog(
+        val dialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val selectedCalendar = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, year)
+                    set(Calendar.MONTH, month)
+                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val fechaFormateada = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)
+                alSeleccionar(fechaFormateada, selectedCalendar.timeInMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        dialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        dialog.show()
+    }
+
+    private fun mostrarCalendarioFin(alSeleccionar: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val dialog = DatePickerDialog(
             requireContext(),
             { _, year, month, dayOfMonth ->
                 val fechaFormateada = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)
@@ -173,7 +183,13 @@ class AgendarFragment : Fragment() {
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        )
+        if (fechaInicioMilis > 0) {
+            dialog.datePicker.minDate = fechaInicioMilis
+        } else {
+            dialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        }
+        dialog.show()
     }
 
     override fun onDestroyView() {

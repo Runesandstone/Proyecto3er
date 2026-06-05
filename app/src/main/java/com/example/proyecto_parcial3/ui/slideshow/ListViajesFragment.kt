@@ -58,7 +58,6 @@ class ListViajesFragment : Fragment() {
         comprobarListaVacia(viajes.isEmpty())
     }
 
-    // FUNCIÓN PARA ELIMINAR VIAJE
     private fun mostrarDialogoEliminar(viaje: Viaje) {
         AlertDialog.Builder(requireContext())
             .setTitle("Eliminar Viaje")
@@ -76,74 +75,83 @@ class ListViajesFragment : Fragment() {
             .show()
     }
 
-    // FUNCIÓN AVANZADA PARA EDITAR VIAJE (INCLUYE CALENDARIOS)
     private fun mostrarDialogoEditar(viaje: Viaje) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Editar datos de tu viaje")
 
-        // Contenedor principal del formulario emergente
         val contenedorEstructura = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(60, 30, 60, 30)
         }
 
-        // 1. Campo Presupuesto
         val inputPresupuesto = EditText(requireContext()).apply {
             hint = "Presupuesto"
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
             setText(viaje.presupuesto.toString())
         }
 
-        // 2. Campo Fecha de Inicio (Deshabilitamos escritura directa para obligar a usar el calendario)
+        var fechaInicioMilis = obtenerMilisDesdeFecha(viaje.fecha)
+
+        val inputFechaFin = EditText(requireContext()).apply {
+            hint = "Fecha de Finalización"
+            isFocusable = false
+            isClickable = true
+            setText(viaje.fFin)
+        }
+
         val inputFechaInicio = EditText(requireContext()).apply {
             hint = "Fecha de Inicio"
             isFocusable = false
             isClickable = true
             setText(viaje.fecha)
             setOnClickListener {
-                mostrarCalendarioEditar { fechaSeleccionada -> setText(fechaSeleccionada) }
+                mostrarCalendarioInicioEditar { fechaSeleccionada, milisegundos ->
+                    setText(fechaSeleccionada)
+                    fechaInicioMilis = milisegundos
+                    inputFechaFin.setText("")
+                }
             }
         }
 
-        // 3. Campo Fecha Fin (Igual, abre calendario al clickear)
-        val inputFechaFin = EditText(requireContext()).apply {
-            hint = "Fecha de Finalización"
-            isFocusable = false
-            isClickable = true
-            setText(viaje.fFin)
-            setOnClickListener {
-                mostrarCalendarioEditar { fechaSeleccionada -> setText(fechaSeleccionada) }
+        inputFechaFin.setOnClickListener {
+            if (fechaInicioMilis == 0L) {
+                Toast.makeText(requireContext(), "Por favor, selecciona primero la fecha de inicio", Toast.LENGTH_SHORT).show()
+            } else {
+                mostrarCalendarioFinEditar(fechaInicioMilis) { fechaSeleccionada ->
+                    inputFechaFin.setText(fechaSeleccionada)
+                }
             }
         }
 
-        // 4. Campo Notas
         val inputNotas = EditText(requireContext()).apply {
             hint = "Notas del viaje"
             setText(viaje.notas)
         }
 
-        // Añadimos todos los campos visuales ordenadamente en vertical
         contenedorEstructura.addView(inputPresupuesto)
         contenedorEstructura.addView(inputFechaInicio)
         contenedorEstructura.addView(inputFechaFin)
         contenedorEstructura.addView(inputNotas)
         builder.setView(contenedorEstructura)
 
-        // Acción al guardar cambios
         builder.setPositiveButton("Guardar Cambios") { _, _ ->
             val nuevoPresupuesto = inputPresupuesto.text.toString().toDoubleOrNull() ?: viaje.presupuesto
             val nuevaFechaInicio = inputFechaInicio.text.toString().trim()
             val nuevaFechaFin = inputFechaFin.text.toString().trim()
             val nuevasNotas = inputNotas.text.toString().trim()
 
-            // Mandamos a reescribir todo en SQLite pasándole los datos actualizados
+            if (nuevaFechaInicio.isEmpty() || nuevaFechaFin.isEmpty()) {
+                Toast.makeText(requireContext(), "Las fechas no pueden estar vacías", Toast.LENGTH_SHORT).show()
+                return@setPositiveButton
+            }
+
             val resultado = dbHelper.actualizarViaje(
                 idViaje = viaje.id,
-                destino = viaje.destino,       // Se mantiene igual
-                fechaInicio = nuevaFechaInicio, //  Nueva Fecha Inicio guardada
-                fechaFin = nuevaFechaFin,       //  Nueva Fecha Fin guardada
+                destino = viaje.destino,
+                fechaInicio = nuevaFechaInicio,
+                fechaFin = nuevaFechaFin,
                 presupuesto = nuevoPresupuesto,
-                transporte = viaje.transporte,   // Se mantiene igual
+                transporte = viaje.transporte,
                 notas = nuevasNotas
             )
 
@@ -158,10 +166,51 @@ class ListViajesFragment : Fragment() {
         builder.show()
     }
 
-    // Selector de fechas interno para la ventana de edición
-    private fun mostrarCalendarioEditar(alSeleccionar: (String) -> Unit) {
+    private fun obtenerMilisDesdeFecha(fecha: String): Long {
+        return try {
+            val partes = fecha.split("/")
+            Calendar.getInstance().apply {
+                set(Calendar.DAY_OF_MONTH, partes[0].toInt())
+                set(Calendar.MONTH, partes[1].toInt() - 1)
+                set(Calendar.YEAR, partes[2].toInt())
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+        } catch (e: Exception) {
+            0L
+        }
+    }
+
+    private fun mostrarCalendarioInicioEditar(alSeleccionar: (String, Long) -> Unit) {
         val calendar = Calendar.getInstance()
-        DatePickerDialog(
+        val dialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val selectedCalendar = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, year)
+                    set(Calendar.MONTH, month)
+                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                val fechaFormateada = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)
+                alSeleccionar(fechaFormateada, selectedCalendar.timeInMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        dialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        dialog.show()
+    }
+
+    private fun mostrarCalendarioFinEditar(minDate: Long, alSeleccionar: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val dialog = DatePickerDialog(
             requireContext(),
             { _, year, month, dayOfMonth ->
                 val fechaFormateada = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year)
@@ -170,7 +219,13 @@ class ListViajesFragment : Fragment() {
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        )
+        if (minDate > 0) {
+            dialog.datePicker.minDate = minDate
+        } else {
+            dialog.datePicker.minDate = System.currentTimeMillis() - 1000
+        }
+        dialog.show()
     }
 
     private fun refrescarLista() {
