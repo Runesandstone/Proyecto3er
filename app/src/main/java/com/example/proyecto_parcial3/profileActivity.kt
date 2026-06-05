@@ -2,6 +2,7 @@ package com.example.proyecto_parcial3
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
@@ -19,14 +20,14 @@ class profileActivity : AppCompatActivity() {
 
     private lateinit var ivProfilePicture: ImageView
     private lateinit var dbHelper: DBHelper
+    private var currentPhotoUri: String = ""
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
             contentResolver.takePersistableUriPermission(uri, flag)
             ivProfilePicture.setImageURI(uri)
-            val prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
-            prefs.edit().putString("foto_perfil", uri.toString()).apply()
+            currentPhotoUri = uri.toString()
         }
     }
 
@@ -48,6 +49,31 @@ class profileActivity : AppCompatActivity() {
         val etPassword = findViewById<TextInputEditText>(R.id.etPassword)
         val btnSave = findViewById<Button>(R.id.btnSave)
         val btnCancel = findViewById<Button>(R.id.btnCancel)
+        val btnDeletePhoto = findViewById<Button>(R.id.btnDeletePhoto)
+
+        val prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
+        val idUsuario = prefs.getInt("id_usuario", -1)
+
+        if (idUsuario != -1) {
+            val db = dbHelper.readableDatabase
+            val cursor = db.rawQuery(
+                "SELECT nombre, contrasena, foto_perfil FROM Usuarios WHERE id_usuario = ?",
+                arrayOf(idUsuario.toString())
+            )
+            if (cursor.moveToFirst()) {
+                etUsername.setText(cursor.getString(0))
+                etPassword.setText(cursor.getString(1))
+                val fotoGuardada = cursor.getString(2)
+                if (!fotoGuardada.isNullOrEmpty()) {
+                    currentPhotoUri = fotoGuardada
+                    ivProfilePicture.setImageURI(Uri.parse(fotoGuardada))
+                } else {
+                    currentPhotoUri = ""
+                    ivProfilePicture.setImageResource(R.mipmap.ic_launcher_round)
+                }
+            }
+            cursor.close()
+        }
 
         tvChangePhoto.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
@@ -55,6 +81,11 @@ class profileActivity : AppCompatActivity() {
 
         ivProfilePicture.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        btnDeletePhoto.setOnClickListener {
+            currentPhotoUri = ""
+            ivProfilePicture.setImageResource(R.mipmap.ic_launcher_round)
         }
 
         btnSave.setOnClickListener {
@@ -66,12 +97,8 @@ class profileActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
-            val fotoPerfil = prefs.getString("foto_perfil", "") ?: ""
-            val idUsuario = prefs.getInt("id_usuario", -1)
-
             if (idUsuario != -1) {
-                val filas = dbHelper.actualizarPerfil(idUsuario, nombreNuevo, contrasenaNueva, fotoPerfil)
+                val filas = dbHelper.actualizarPerfil(idUsuario, nombreNuevo, contrasenaNueva, currentPhotoUri)
                 if (filas > 0) {
                     Toast.makeText(this, "Perfil actualizado", Toast.LENGTH_SHORT).show()
                     finish()

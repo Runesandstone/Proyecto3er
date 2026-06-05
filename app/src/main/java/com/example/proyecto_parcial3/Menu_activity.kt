@@ -5,7 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.imageview.ShapeableImageView // <-- Import actualizado
+import android.widget.ImageButton
+import android.widget.TextView
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,7 +22,8 @@ class Menu_activity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMenuBinding
-    private lateinit var imageViewPerfil: ShapeableImageView // <-- Tipo de vista actualizado
+    private lateinit var imageViewPerfil: ShapeableImageView
+    private lateinit var imageButtonEdit: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,16 +37,24 @@ class Menu_activity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_menu)
 
+        // Obtenemos la vista de la cabecera
         val headerView = navView.getHeaderView(0)
-        imageViewPerfil = headerView.findViewById(R.id.imageView)
 
-        // Al hacer clic en la foto de perfil del menú, te lleva a la actividad de perfil
+        // Enlazamos la foto y el botón de lápiz
+        imageViewPerfil = headerView.findViewById(R.id.imageView)
+        imageButtonEdit = headerView.findViewById(R.id.imageButton)
+
+        // Configuramos el clic para la FOTO
         imageViewPerfil.setOnClickListener {
             val intent = Intent(this, profileActivity::class.java)
             startActivity(intent)
         }
 
-        cargarFotoGuardada()
+        // Configuramos el clic para el BOTÓN DE LÁPIZ
+        imageButtonEdit.setOnClickListener {
+            val intent = Intent(this, profileActivity::class.java)
+            startActivity(intent)
+        }
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -54,25 +65,48 @@ class Menu_activity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    private fun cargarFotoGuardada() {
-        // Buscamos exactamente en el mismo archivo y con la misma llave que usamos en profileActivity
-        val sharedPreferences = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
-        val uriString = sharedPreferences.getString("foto_perfil", null)
-
-        if (uriString != null) {
-            try {
-                val uri = Uri.parse(uriString)
-                imageViewPerfil.setImageURI(uri)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-        // Cuando regresas de la ventana de perfil a esta, se vuelve a cargar la foto nueva automáticamente
-        cargarFotoGuardada()
+        actualizarDatosCabecera()
+    }
+
+    private fun actualizarDatosCabecera() {
+        val prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
+        val idUsuario = prefs.getInt("id_usuario", -1)
+
+        if (idUsuario != -1) {
+            val dbHelper = DBHelper(this)
+            val db = dbHelper.readableDatabase
+            val cursor = db.rawQuery(
+                "SELECT nombre, foto_perfil FROM Usuarios WHERE id_usuario = ?",
+                arrayOf(idUsuario.toString())
+            )
+
+            if (cursor.moveToFirst()) {
+                val nombre = cursor.getString(0)
+                val fotoGuardada = cursor.getString(1)
+
+                val navView: NavigationView = binding.navView
+                val headerView = navView.getHeaderView(0)
+
+                val tvNombre = headerView.findViewById<TextView>(R.id.tvUserName)
+                if (!nombre.isNullOrEmpty() && tvNombre != null) {
+                    tvNombre.text = nombre
+                }
+
+                if (!fotoGuardada.isNullOrEmpty()) {
+                    try {
+                        val uri = Uri.parse(fotoGuardada)
+                        imageViewPerfil.setImageURI(uri)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    imageViewPerfil.setImageResource(R.mipmap.ic_launcher_round)
+                }
+            }
+            cursor.close()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
