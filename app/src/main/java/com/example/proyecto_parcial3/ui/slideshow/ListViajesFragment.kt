@@ -15,6 +15,8 @@ import com.example.proyecto_parcial3.DBHelper
 import com.example.proyecto_parcial3.databinding.FragmentListviajesBinding
 import com.example.proyecto_parcial3.model.Viaje
 import com.example.proyecto_parcial3.ui.adapter.ViajeAdapter
+import java.io.File
+import java.io.FileOutputStream
 import java.util.Calendar
 
 class ListViajesFragment : Fragment() {
@@ -52,10 +54,56 @@ class ListViajesFragment : Fragment() {
         viajeAdapter = ViajeAdapter(
             viajes,
             onEditarClick = { viaje -> mostrarDialogoEditar(viaje) },
-            onEliminarClick = { viaje -> mostrarDialogoEliminar(viaje) }
+            onEliminarClick = { viaje -> mostrarDialogoEliminar(viaje) },
+            onCompartirClick = { viaje, vistaTarjeta ->
+                //Llamamos a la función encargada de hacer el render de la imagen y compartir
+                compartirTarjetaComoImagen(viaje, vistaTarjeta)
+            }
         )
         binding.rvViajes.adapter = viajeAdapter
         comprobarListaVacia(viajes.isEmpty())
+    }
+
+    private fun compartirTarjetaComoImagen(viaje: Viaje, vista: View) {
+        try {
+            // 1. Crear un Bitmap del tamaño de la tarjeta
+            val bitmap = android.graphics.Bitmap.createBitmap(
+                vista.width, vista.height, android.graphics.Bitmap.Config.ARGB_8888
+            )
+
+            val canvas = android.graphics.Canvas(bitmap)
+            vista.draw(canvas)
+
+            // 2. guardar temporalmente la imagen para poder compartirla
+            val carpetaCache = File(requireContext().cacheDir, "viajes_compartidos")
+            carpetaCache.mkdirs()
+            val archivo = File(carpetaCache, "viaje_${viaje.id}.png")
+            val flujoSalida = FileOutputStream(archivo)
+            bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, flujoSalida)
+            flujoSalida.flush()
+            flujoSalida.close()
+
+            // 3. Obtener la URI segura usando FileProvider
+            val uriImagen = androidx.core.content.FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.fileprovider",
+                archivo
+            )
+
+            // 4. Lanzar el menú para compartir de Android
+            val intentCompartir = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "image/png"
+                putExtra(android.content.Intent.EXTRA_STREAM, uriImagen)
+                putExtra(android.content.Intent.EXTRA_SUBJECT, "¡Mi próximo viaje a ${viaje.destino}")
+                putExtra(android.content.Intent.EXTRA_TEXT, "Mira los detalles de mi viaje a ${viaje.destino} planeado para el ${viaje.fecha}")
+                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            startActivity(android.content.Intent.createChooser(intentCompartir, "Compartir viaje vía:"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Error al generar la imagen de vaije", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun mostrarDialogoEliminar(viaje: Viaje) {

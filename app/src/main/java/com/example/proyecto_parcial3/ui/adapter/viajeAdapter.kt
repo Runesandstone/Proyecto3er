@@ -1,6 +1,7 @@
 package com.example.proyecto_parcial3.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_parcial3.databinding.ItemViajeBinding
@@ -9,7 +10,8 @@ import com.example.proyecto_parcial3.model.Viaje
 class ViajeAdapter(
     private var listaViajes: List<Viaje>,
     private val onEditarClick: (Viaje) -> Unit,   // Función callback para editar
-    private val onEliminarClick: (Viaje) -> Unit // Función callback para eliminar
+    private val onEliminarClick: (Viaje) -> Unit, // Función callback para eliminar
+    private val onCompartirClick: (Viaje, View) -> Unit // Función callback para compartir
 ) : RecyclerView.Adapter<ViajeAdapter.ViajeViewHolder>() {
 
     class ViajeViewHolder(val binding: ItemViajeBinding) : RecyclerView.ViewHolder(binding.root)
@@ -33,7 +35,9 @@ class ViajeAdapter(
 
             ibtnEditar.setOnClickListener { onEditarClick(viaje) }
             ibtnBorrar.setOnClickListener { onEliminarClick(viaje) }
-            ibtnCompartir.setOnClickListener { /* Acción compartir (de tu otro compañero) */ }
+            ibtnCompartir.setOnClickListener {
+                onCompartirClick(viaje, holder.itemView)
+            }
         }
     }
 
