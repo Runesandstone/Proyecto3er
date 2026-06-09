@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.TextView
 import com.google.android.material.imageview.ShapeableImageView
@@ -37,20 +38,16 @@ class Menu_activity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_menu)
 
-        // Obtenemos la vista de la cabecera
         val headerView = navView.getHeaderView(0)
 
-        // Enlazamos la foto y el botón de lápiz
         imageViewPerfil = headerView.findViewById(R.id.imageView)
         imageButtonEdit = headerView.findViewById(R.id.imageButton)
 
-        // Configuramos el clic para la FOTO
         imageViewPerfil.setOnClickListener {
             val intent = Intent(this, profileActivity::class.java)
             startActivity(intent)
         }
 
-        // Configuramos el clic para el BOTÓN DE LÁPIZ
         imageButtonEdit.setOnClickListener {
             val intent = Intent(this, profileActivity::class.java)
             startActivity(intent)
@@ -112,6 +109,30 @@ class Menu_activity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_activity, menu)
         return true
+    }
+
+    // ==========================================
+    // FUNCIÓN PARA DETECTAR EL CLIC EN EL MENÚ
+    // ==========================================
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.log_out -> {
+                cerrarSesion()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun cerrarSesion() {
+        val prefs = getSharedPreferences("MisPreferencias", Context.MODE_PRIVATE)
+        prefs.edit().putInt("id_usuario", -1).apply()
+
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {
